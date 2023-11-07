@@ -1,8 +1,7 @@
-import 'package:flutter/material.dart';
-import 'package:handgame/r.dart';
 import 'dart:math';
 
-import 'package:handgame/screens/handgame/component/header_score.dart';
+import 'package:flutter/material.dart';
+import 'package:handgame/screens/handgame/component/game_ui.dart';
 import 'package:handgame/screens/handgame/component/showdialog.dart';
 
 class RockPaperScissorsGame extends StatefulWidget {
@@ -20,129 +19,41 @@ class _RockPaperScissorsGameState extends State<RockPaperScissorsGame> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Rock, Paper, Scissors Game'),
-        centerTitle: true,
-      ),
-      body: Column(
-        children: [
-          const SizedBox(
-            height: 30,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              ScoreWidget(
-                score: playerScore,
-                color: Colors.amber,
-                textColor: Colors.white,
-                label: 'Player Score',
-              ),
-              const SizedBox(
-                width: 20,
-              ),
-              ScoreWidget(
-                score: botScore,
-                color: Colors.redAccent,
-                textColor: Colors.white,
-                label: 'BOT Score',
-              ),
-            ],
-          ),
-          const SizedBox(
-            height: 20,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              Text(
-                'Player \n$playerChoice ',
-                textAlign: TextAlign.center,
-                style: const TextStyle(fontSize: 20, letterSpacing: 2),
-              ),
-              Text(
-                'BOT \n$botChoice',
-                textAlign: TextAlign.center,
-                style: const TextStyle(fontSize: 20, letterSpacing: 2),
-              )
-            ],
-          ),
-          SizedBox(
-            height: MediaQuery.of(context).size.height * 0.5,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                playerChoice != ''
-                    ? handPlayerChoice(playerChoice)
-                    : Container(),
-                botChoice != '' ? handBotChoice(botChoice) : Container(),
-              ],
-            ),
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              ElevatedButton(
-                onPressed: () {
-                  setState(() {
-                    playerChoice = 'Rock';
-                    botChoice = getBotChoice();
-                    calculateResult();
-                  });
-                },
-                child: const Text('Rock'),
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  setState(() {
-                    playerChoice = 'Paper';
-                    botChoice = getBotChoice();
-                    calculateResult();
-                  });
-                },
-                child: const Text('Paper'),
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  setState(() {
-                    playerChoice = 'Scissors';
-                    botChoice = getBotChoice();
-                    calculateResult();
-                  });
-                },
-                child: const Text('Scissors'),
-              ),
-            ],
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              ElevatedButton(
-                onPressed: () {
-                  setState(() {
-                    playerChoice = '';
-                    botChoice = '';
-                  });
-                },
-                child: const Text('Play again'),
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  setState(() {
-                    playerScore = 0;
-                    botScore = 0;
-                    playerChoice = '';
-                    botChoice = '';
-                  });
-                },
-                child: const Text('restart'),
-              ),
-            ],
-          )
-        ],
-      ),
+    return GameUI(
+      playerScore: playerScore,
+      botScore: botScore,
+      playerChoice: playerChoice,
+      botChoice: botChoice,
+      onRockPressed: () => _onChoiceSelected('Rock'),
+      onPaperPressed: () => _onChoiceSelected('Paper'),
+      onScissorsPressed: () => _onChoiceSelected('Scissors'),
+      onPlayAgainPressed: _resetChoices,
+      onRestartPressed: _resetGame,
     );
+  }
+
+  void _onChoiceSelected(String choice) {
+    setState(() {
+      playerChoice = choice;
+      botChoice = getBotChoice();
+      calculateResult();
+    });
+  }
+
+  void _resetChoices() {
+    setState(() {
+      playerChoice = '';
+      botChoice = '';
+    });
+  }
+
+  void _resetGame() {
+    setState(() {
+      playerScore = 0;
+      botScore = 0;
+      playerChoice = '';
+      botChoice = '';
+    });
   }
 
   String getBotChoice() {
@@ -177,46 +88,6 @@ class _RockPaperScissorsGameState extends State<RockPaperScissorsGame> {
         ),
       );
       botScore++;
-    }
-  }
-
-  handBotChoice(String playChoice) {
-    switch (playChoice) {
-      case 'Rock':
-        return Image.asset(
-          UIdata.icBotRock,
-          width: MediaQuery.of(context).size.width * 0.4,
-        );
-      case 'Paper':
-        return Image.asset(
-          UIdata.icBotPaper,
-          width: MediaQuery.of(context).size.width * 0.4,
-        );
-      case 'Scissors':
-        return Image.asset(
-          UIdata.icBotScissors,
-          width: MediaQuery.of(context).size.width * 0.4,
-        );
-    }
-  }
-
-  handPlayerChoice(String playChoice) {
-    switch (playChoice) {
-      case 'Rock':
-        return Image.asset(
-          UIdata.icPlayerRock,
-          width: MediaQuery.of(context).size.width * 0.4,
-        );
-      case 'Paper':
-        return Image.asset(
-          UIdata.icPlayerPaper,
-          width: MediaQuery.of(context).size.width * 0.4,
-        );
-      case 'Scissors':
-        return Image.asset(
-          UIdata.icPlayerScissors,
-          width: MediaQuery.of(context).size.width * 0.4,
-        );
     }
   }
 }
