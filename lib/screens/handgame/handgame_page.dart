@@ -73,8 +73,10 @@ class _RockPaperScissorsGameState extends State<RockPaperScissorsGame> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                handPlayerChoice(playerChoice),
-                handBotChoice(botChoice),
+                playerChoice != ''
+                    ? handPlayerChoice(playerChoice)
+                    : Container(),
+                botChoice != '' ? handBotChoice(botChoice) : Container(),
               ],
             ),
           ),
